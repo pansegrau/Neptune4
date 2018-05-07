@@ -13,14 +13,8 @@ if [ -z "$METERID" ]; then
   exit 0
 fi
 
-# Setup for Metric/CCF
-UNIT_DIVISOR=10000
-UNIT="CCF" # Hundred cubic feet
-if [ ! -z "$METRIC" ]; then
-  echo "Setting meter to metric readings"
-  UNIT_DIVISOR=1000
-  UNIT="Cubic Meters"
-fi
+UNIT_DIVISOR=1000
+UNIT="Cubic Meters"
 
 # Kill this script (and restart the container) if we haven't seen an update in 30 minutes
 # Nasty issue probably related to a memory leak, but this works really well, so not changing it
@@ -36,7 +30,7 @@ while true; do
   echo "Meter info: $json"
 
   consumption=$(echo $json | python -c "import json,sys;obj=json.load(sys.stdin);print float(obj[\"Message\"][\"Consumption\"])/$UNIT_DIVISOR")
-  echo "Current consumption: $consumption $UNIT"
+  echo "Total Consumption: $consumption $UNIT"
 
   # Replace with your custom logging code
   if [ ! -z "$CURL_API" ]; then
