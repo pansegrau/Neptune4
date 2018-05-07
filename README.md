@@ -1,11 +1,11 @@
 # Raspberry Pi tracker for Neptune R900 smart water meters
-### Works for City of Atlanta and many other municipalities
+### Tracking water consumption
 
 [See an example](https://docs.google.com/spreadsheets/d/1XC9UFRQpvzUn7gjXML7KuaprB8APLXgE_EjsmUM8MWI/edit?usp=sharing) (Please don't judge me by my water usage)
 
 ## Introduction
 
-Unfortunately this is less elegant and more technically verbose than I would like, but it's still the only way I've found to reliably track my water usage. I've been using this to track my water usage for over a year without any problems (although I've just recently switched for Google Spreadsheets for logging)
+
 
 The goals of this project are:
 - Use a Raspberry Pi and a RTL-SDR to track my smart water meter (Read: cheap, less than $50)
@@ -31,17 +31,6 @@ You'll need to be able to do the following to get this to work:
 - Clone and push a repository with 'git'
 - Write a disk image to an SD card
 - Basic script editing
-
-## Installation
-
-1. Signup for [Resin.io](https://resin.io)
-1. Create a new Application and download the image for the Raspberry Pi
-1. Install the image on the Raspberry Pi
-1. Plug in your RTL-SDR into the USB port on the Raspberry Pi
-1. `git push` this repository to your Resin application
-1. In Resin, view the logs on your device and find your meter ID. This is hardest part. You'll need to know your current reading to match it up to the meter ID. I've not found any correlation between what's written on the meter and the ID being sent out over the air.
-1. Once you find your meter ID, enter it as an environment variable in the Resin dashboard under "METERID"
-1. At this point it's up to you as to where you want to 'send' the data. I log to a Google Spreadsheet and have provided instructions at the end of this README
 
 ## Logging to Google Spreadsheet
 
