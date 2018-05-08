@@ -12,6 +12,16 @@ if [ -z "$METERID" ]; then
   rtlamr -msgtype=r900
   exit 0
 fi
+if [ -z "$METERID2" ]; then
+  echo "METERID2 not set, launching in debug mode"
+  echo "Enter Terminal via Resin and run 'rtlamr -msgtype=r900' to see all the local water meters and find your meter ID"
+  
+  rtl_tcp &> /dev/null &
+  sleep 10 #Let rtl_tcp startup and open a port
+
+  rtlamr -msgtype=r900
+  exit 0
+fi
 
 UNIT_DIVISOR=1000
 UNIT="Cubic Meters"
@@ -188,7 +198,165 @@ consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);p
     t12PM=$irrint
     echo $t12PM > /data/bin12PM
   fi
-echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+  
+ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+ 
+ #Collect data from Pit meter
+  json=$(rtlamr -msgtype=r900 -filterid=$METERID2 -single=true -format=json)
+  echo "Pit meter info: $json"
+  consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["Consumption"])/1000')
+  pitmeter=$consumption
+pit=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["Consumption"])/1')
+
+#convert to integer
+pitint=${pit%.*}
+
+# record data for nightly consumption of Pit meter at 1 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 19 && `date +%H` -lt 20 ]];then
+    echo "Presently processing 12 PM noon to 1 PM"
+    t1PMb=$pitint
+    echo $t1PMb > /data/bin1PMb
+  fi
+  # record data for nightly consumption of Pit meter at 2 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 20 && `date +%H` -lt 21 ]];then
+    echo "Presently processing 1 PM to 2 PM"
+    t2PMb=$pitint
+    echo $t2PMb > /data/bin2PMb
+  fi
+  # record data for nightly consumption of Pit meter at 3 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 21 && `date +%H` -lt 22 ]];then
+    echo "Presently processing 2 PM to 3 PM"
+    t3PMb=$pitint
+    echo $t3PMb > /data/bin3PMb
+  fi
+  # record data for nightly consumption of Pit meter at 4 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 22 && `date +%H` -lt 23 ]];then
+    echo "Presently processing 3 PM to 4 PM"
+    t4PMb=$pitint
+    echo $t4PMb > /data/bin4PMb
+  fi
+  # record data for nightly consumption of Pit meter at 5 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 23 && `date +%H` -lt 24 ]];then
+    echo "Presently processing 4 PM to 5 PM"
+    t5PMb=$pitint
+    echo $t5PMb > /data/bin5PMb
+  fi
+  # record data for nightly consumption of Pit meter at 6 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 0 && `date +%H` -lt 1 ]];then
+    echo "Presently processing 5 to 6 PM"
+    t6PMb=$pitint
+    echo $t6PMb > /data/bin6PMb
+  fi
+  # record data for nightly consumption of Pit meter at 7 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 1 && `date +%H` -lt 2 ]];then
+    echo "Presently processing 6 PM to 7 PM"
+    t7PMb=$pitint
+    echo $t7PMb > /data/bin7PMb
+  fi
+  # record data for nightly consumption of Pit meter at 8 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 2 && `date +%H` -lt 3 ]];then
+    echo "Presently processing 7 PM to 8 PM"
+    t8PMb=$pitint
+    echo $t8PMb > /data/bin8PMb
+  fi
+  # record data for nightly consumption of Pit meter at 9 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 3 && `date +%H` -lt 4 ]];then
+    echo "Presently processing 8 PM to 9 PM"
+    t9PMb=$pitint
+    echo $t9PMb > /data/bin9PMb
+  fi
+  # record data for nightly consumption of Pit meter at 10 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 4 && `date +%H` -lt 5 ]];then
+    echo "Presently processing 9 PM to 10 PM"
+    t10PMb=$pitint
+    echo $t10PMb > /data/bin10PMb
+  fi
+  # record data for nightly consumption of Pit meter at 11 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 5 && `date +%H` -lt 6 ]];then
+    echo "Presently processing 10 to 11 PM"
+    t11PMb=$pitint
+    echo $t11PMb > /data/bin11PMb
+  fi
+  # record data for nightly consumption of Pit meter at 12 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 6 && `date +%H` -lt 7 ]];then
+    echo "Presently processing 11 PM to 12 AM midnight"
+    t12AMb=$pitint
+    echo $t12AMb > /data/bin12AMb
+  fi
+  # record data for nightly consumption of Pit meter at 1 AM (time is adjusted due to UTC)
+  if [[ `date +%-H` -ge 7 && `date +%-H` -lt 8 ]];then
+    echo "Presently processing 12 AM midnight to 1 AM"
+    t1AMb=$pitint
+    echo $t1AMb > /data/bin1AMb
+  fi
+  # record data for nightly consumption of Pit meter at 2 AM (time is adjusted due to UTC)
+  if [[ `date +%-H` -ge 8 && `date +%-H` -lt 9 ]];then
+    echo "Presently processing 1 AM to 2 AM"
+    t2AMb=$pitint
+    echo $t2AMb > /data/bin2AMb
+  fi
+  # record data for nightly consumption of Pit meter at 3 AM (time is adjusted due to UTC)
+  if [[ `date +%-H` -ge 9 && `date +%-H` -lt 10 ]];then
+    echo "Presently processing 2 AM to 3 AM"
+    t3AMb=$pitint
+    echo $t3AMb > /data/bin3AMb
+  fi
+  # record data for nightly consumption of Pit meter at 4 AM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 10 && `date +%H` -lt 11 ]];then
+    echo "Presently processing 3 AM to 4 AM"
+    t4AMb=$pitint
+    echo $t4AMb > /data/bin4AMb
+  fi
+  # record data for nightly consumption of Pit meter at 5 AM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 11 && `date +%H` -lt 12 ]];then
+    echo "Presently processing 4 AM to 5 AM"
+    t5AMb=$pitint
+    echo $t5AMb > /data/bin5AMb
+  fi
+  # record data for nightly consumption of Pit meter at 6 AM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 12 && `date +%H` -lt 13 ]];then
+    echo "Presently processing 5 AM to 6 AM"
+    t6AMb=$pitint
+    echo $t6AMb > /data/bin6AMb
+  fi
+  # record data for nightly consumption of Pit meter at 7 AM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 13 && `date +%H` -lt 14 ]];then
+    echo "Presently processing 6 AM to 7 AM"
+    t7AMb=$pitint
+    echo $t7AMb > /data/bin7AMb
+  fi
+  # record data for nightly consumption of Pit meter at 8 AM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 14 && `date +%H` -lt 15 ]];then
+    echo "Presently processing 7 AM to 8 AM"
+    t8AMb=$pitint
+    echo $t8AMb > /data/bin8AMb
+  fi
+  # record data for nightly consumption of Pit meter at 9 AM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 15 && `date +%H` -lt 16 ]];then
+    echo "Presently processing 8 AM to 9 AM"
+    t9AMb=$pitint
+    echo $t9AMb > /data/bin9AMb
+  fi
+  # record data for nightly consumption of Pit meter at 10 AM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 16 && `date +%H` -lt 17 ]];then
+    echo "Presently processing 9 AM to 10 AM"
+    t10AMb=$pitint
+    echo $t10AMb > /data/bin10AMb
+  fi
+  # record data for nightly consumption of Pit meter at 11 AM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 17 && `date +%H` -lt 18 ]];then
+    echo "Presently processing 10 AM to 11 AM"
+    t11AMb=$pitint
+    echo $t11AMb > /data/bin11AMb
+  fi
+  # record data for nightly consumption of Pit meter at 12 PM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 18 && `date +%H` -lt 19 ]];then
+    echo "Presently processing 11 AM to 12 PM noon"
+    t12PMb=$pitint
+    echo $t12PMb > /data/bin12PMb
+  fi
+  
+ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
 #need timely updates for irrigation troubleshooting
   echo "Hourly updates for Irrigation trouble-shooting"
   t1PM=$(cat /data/bin1PM)
@@ -292,10 +460,113 @@ echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   echo "11 PM $q11PM     litres,     $f11PM litres per min"
   echo "12 AM $q12AM     litres,     $f12AM litres per min"
 
+#need timely updates for pit troubleshooting
+  echo "Hourly updates for Pit trouble-shooting"
+  t1PMb=$(cat /data/bin1PMb)
+  t2PMb=$(cat /data/bin2PMb)
+  t3PMb=$(cat /data/bin3PMb)
+  t4PMb=$(cat /data/bin4PMb)
+  t5PMb=$(cat /data/bin5PMb)
+  t6PMb=$(cat /data/bin6PMb)
+  t7PMb=$(cat /data/bin7PMb)
+  t8PMb=$(cat /data/bin8PMb)
+  t9PMb=$(cat /data/bin9PMb)
+  t10PMb=$(cat /data/bin10PMb)
+  t11PMb=$(cat /data/bin11PMb)
+  t12AMb=$(cat /data/bin12AMb)
+  t1AMb=$(cat /data/bin1AMb)
+  t2AMb=$(cat /data/bin2AMb)
+  t3AMb=$(cat /data/bin3AMb)
+  t4AMb=$(cat /data/bin4AMb)
+  t5AMb=$(cat /data/bin5AMb)
+  t6AMb=$(cat /data/bin6AMb)
+  t7AMb=$(cat /data/bin7AMb)
+  t8AMb=$(cat /data/bin8AMb)
+  t9AMb=$(cat /data/bin9AMb)
+  t10AMb=$(cat /data/bin10AMb)
+  t11AMb=$(cat /data/bin11AMb)
+  t12PMb=$(cat /data/bin12PMb)
+  q1AMb=$(echo $((t1AMb - t12AMb)))
+  q2AMb=$(echo $((t2AMb - t1AMb)))
+  q3AMb=$(echo $((t3AMb - t2AMb)))
+  q4AMb=$(echo $((t4AMb - t3AMb)))
+  q5AMb=$(echo $((t5AMb - t4AMb)))
+  q6AMb=$(echo $((t6AMb - t5AMb)))
+  q7AMb=$(echo $((t7AMb - t6AMb)))
+  q8AMb=$(echo $((t8AMb - t7AMb)))
+  q9AMb=$(echo $((t9AMb - t8AMb)))
+  q10AMb=$(echo $((t10AMb - t9AMb)))
+  q11AMb=$(echo $((t11AMb - t10AMb)))
+  q12PMb=$(echo $((t12PMb - t11AMb)))
+  q1PMb=$(echo $((t1PMb - t12PMb)))
+  q2PMb=$(echo $((t2PMb - t1PMb)))
+  q3PMb=$(echo $((t3PMb - t2PMb)))
+  q4PMb=$(echo $((t4PMb - t3PMb)))
+  q5PMb=$(echo $((t5PMb - t4PMb)))
+  q6PMb=$(echo $((t6PMb - t5PMb)))
+  q7PMb=$(echo $((t7PMb - t6PMb)))
+  q8PMb=$(echo $((t8PMb - t7PMb)))
+  q9PMb=$(echo $((t9PMb - t8PMb)))
+  q10PMb=$(echo $((t10PMb - t9PMb)))
+  q11PMb=$(echo $((t11PMb - t10PMb)))
+  q12AMb=$(echo $((t12AMb - t11PMb)))
+  
+  f1AMb=$(echo $((100 * q1AMb / 60))| sed 's/..$/.&/')
+  f2AMb=$(echo $((100 * q2AMb / 60))| sed 's/..$/.&/')
+  f3AMb=$(echo $((100 * q3AMb / 60))| sed 's/..$/.&/')
+  f4AMb=$(echo $((100 * q4AMb / 60))| sed 's/..$/.&/')
+  f5AMb=$(echo $((100 * q5AMb / 60))| sed 's/..$/.&/')
+  f6AMb=$(echo $((100 * q6AMb / 60))| sed 's/..$/.&/')
+  f7AMb=$(echo $((100 * q7AMb / 60))| sed 's/..$/.&/')
+  f8AMb=$(echo $((100 * q8AMb / 60))| sed 's/..$/.&/')
+  f9AMb=$(echo $((100 * q9AMb / 60))| sed 's/..$/.&/')
+  f10AMb=$(echo $((100 * q10AMb / 60))| sed 's/..$/.&/')
+  f11AMb=$(echo $((100 * q11AMb / 60))| sed 's/..$/.&/')
+  f12PMb=$(echo $((100 * q12PMb / 60))| sed 's/..$/.&/')
+  f1PMb=$(echo $((100 * q1PMb / 60))| sed 's/..$/.&/')
+  f2PMb=$(echo $((100 * q2PMb / 60))| sed 's/..$/.&/')
+  f3PMb=$(echo $((100 * q3PMb / 60))| sed 's/..$/.&/')
+  f4PMb=$(echo $((100 * q4PMb / 60))| sed 's/..$/.&/')
+  f5PMb=$(echo $((100 * q5PMb / 60))| sed 's/..$/.&/')
+  f6PMb=$(echo $((100 * q6PMb / 60))| sed 's/..$/.&/')
+  f7PMb=$(echo $((100 * q7PMb / 60))| sed 's/..$/.&/')
+  f8PMb=$(echo $((100 * q8PMb / 60))| sed 's/..$/.&/')
+  f9PMb=$(echo $((100 * q9PMb / 60))| sed 's/..$/.&/')
+  f10PMb=$(echo $((100 * q10PMb / 60))| sed 's/..$/.&/')
+  f11PMb=$(echo $((100 * q11PMb / 60))| sed 's/..$/.&/')
+  f12AMb=$(echo $((100 * q12AMb / 60))| sed 's/..$/.&/')
+  
+  echo "Quantity and the Approximate Average Flow-Rate each hour"
+  echo "___________________________________________________________________________________________"
+  echo "1 AM  $q1AMb     litres,     $f1AMb litres per min"    
+  echo "2 AM  $q2AMb     litres,     $f2AMb litres per min" 
+  echo "3 AM  $q3AMb     litres,     $f3AMb litres per min" 
+  echo "4 AM  $q4AMb     litres,     $f4AMb litres per min" 
+  echo "5 AM  $q5AMb     litres,     $f5AMb litres per min" 
+  echo "6 AM  $q6AMb     litres,     $f6AMb litres per min" 
+  echo "7 AM  $q7AMb     litres,     $f7AMb litres per min" 
+  echo "8 AM  $q8AMb     litres,     $f8AMb litres per min" 
+  echo "9 AM  $q9AMb     litres,     $f9AMb litres per min" 
+  echo "10 AM $q10AMb     litres,     $f10AMb litres per min" 
+  echo "11 AM $q11AMb     litres,     $f11AMb litres per min"
+  echo "12 PM $q12PMb     litres,     $f12PMb litres per min"
+  echo "1 PM  $q1PMb     litres,     $f1PMb litres per min"
+  echo "2 PM  $q2PMb     litres,     $f2PMb litres per min"
+  echo "3 PM  $q3PMb     litres,     $f3PMb litres per min"
+  echo "4 PM  $q4PMb     litres,     $f4PMb litres per min"
+  echo "5 PM  $q5PMb     litres,     $f5PMb litres per min"
+  echo "6 PM  $q6PMb     litres,     $f6PMb litres per min"
+  echo "7 PM  $q7PMb     litres,     $f7PMb litres per min"
+  echo "8 PM  $q8PMb     litres,     $f8PMb litres per min"
+  echo "9 PM  $q9PMb     litres,     $f9PMb litres per min"
+  echo "10 PM $q10PMb     litres,     $f10PMb litres per min"
+  echo "11 PM $q11PMb     litres,     $f11PMb litres per min"
+  echo "12 AM $q12AMb     litres,     $f12AMb litres per min"
+
  echo "********************************************************************************************"
   echo "*                Total Consumption Data in Cubic Meters                                    "
   echo "*    Consumption Meter One                           $irrmeter Cubic Meters                "
-  echo "*    Consumption Meter Two                           $irrmeter Cubic Meters                "
+  echo "*    Consumption Meter Two                           $pitmeter Cubic Meters                "
   echo "*    Consumption Meter Three                         $irrmeter Cubic Meters              "
 echo "********************************************************************************************"
 
