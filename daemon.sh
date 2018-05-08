@@ -197,6 +197,9 @@ consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);p
   echo "Pit meter info: $json"
   consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["Consumption"])/1000')
   pitmeter=$consumption
+  echo "Total Consumption: $consumption $UNIT"
+  echo "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
+  echo "Consumption Pit Meter: $consumption Cubic Meters"
 pit=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["Consumption"])/1')
 
 #convert to integer
