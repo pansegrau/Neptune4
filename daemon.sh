@@ -48,9 +48,13 @@ consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);p
   
   leak=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["Leak"])/1')
   leakcheck=$leak
+  backflow=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["BackFlow"])/1')
+  backflowcheck=$backflow
   leaknow=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["LeakNow"])/1')
-  echo "leaks: $leakcheck $UNIT2"
-  echo "Back flow: $leaknow $UNIT2"
+  leaknowcheck=$leaknow
+  echo "Irrigation Leaks: $leakcheck $UNIT2"
+  echo "Irrigation Leaknow: $leaknowcheck $UNIT2"
+  echo "Irrigation Backflow: $backflowcheck $UNIT2"
 
   # record data for nightly consumption of Irrigation meter at 1 PM (time is adjusted due to UTC)
   if [[ `date +%H` -ge 19 && `date +%H` -lt 20 ]];then
@@ -215,6 +219,16 @@ pitint=${pit%.*}
   house=$(echo $((pitint - irrint)))
   #convert to cubic meters
   housemeter=$(echo $((100 * house / 1000))| sed 's/..$/.&/')
+ 
+  leakp=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["Leak"])/1')
+  leakcheckp=$leakp
+  backflowp=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["BackFlow"])/1')
+  backflowcheckp=$backflowp
+  leaknowp=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["LeakNow"])/1')
+  leaknowcheckp=$leaknowp
+  echo "Pit Leaks: $leakcheckp $UNIT2"
+  echo "Pit Leaknow: $leaknowcheckp $UNIT2"
+  echo "Pit Backflow: $backflowcheckp $UNIT2"
 
   # record data for daily house consumption of House at 1 AM (time is adjusted due to UTC)
   if [[ `date +%H` -ge 7 && `date +%H` -lt 8 ]];then
