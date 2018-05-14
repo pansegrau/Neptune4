@@ -233,6 +233,11 @@ pitint=${pit%.*}
   leaknowp=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["LeakNow"])/1')
   leaknowcheckp=$leaknowp
  
+ #convert to integers
+ leakcheckintp=${leakcheckp%.*}
+ backflowcheckintp=${backflowcheckp%.*}
+ leaknowcheckintp=${leaknowcheckp%.*}
+ 
   # record data for daily house consumption of House at 1 AM (time is adjusted due to UTC)
   if [[ `date +%H` -ge 7 && `date +%H` -lt 8 ]];then
     echo $house > /data/binhouse1AM
@@ -616,29 +621,29 @@ pitint=${pit%.*}
   echo "Irrigation Leaknow    : $leaknowcheck $UNIT2"
   echo "Irrigation Backflow   : $backflowcheck $UNIT2"
   
-if [[ "$leakcheckint" -ge "$testnumber" ]]; then
-  echo "Help there was a leak this week" ; else
-  echo "There were no leaks recently"
+if [[ "$leakcheckint" -gt "$testnumber" ]]; then
+  echo "Help there was a leak this week in Irrigation System" ; else
+  echo "There were no leaks recently in Irrigation System"
 fi
-if [[ "$leaknowcheckint" -ge "$testnumber" ]]; then
-  echo "Help there is a leak today" ; else
-  echo "There are no leaks at this moment"  
+if [[ "$leaknowcheckint" -gt "$testnumber" ]]; then
+  echo "Help there is a leak today in Irrigation System" ; else
+  echo "There are no leaks at this moment in Irrigation System"  
 fi
-if [[ "$backflowcheckint" -ge "$testnumber" ]]; then
-  echo "Help there is a backflow" ; else
-  echo "There is no backflow"  
+if [[ "$backflowcheckint" -gt "$testnumber" ]]; then
+  echo "Help there is a backflow in Irrigation System" ; else
+  echo "There is no backflow in Irrigation System"  
 fi
-if [ "$leakcheckint" -gt "$testnumber" ]; then
-  echo "Help there was a leak this week2" ; else
-  echo "There were no leaks recently2"  
+if [ "$leakcheckintp" -gt "$testnumber" ]; then
+  echo "Help there was a leak this week in Pit System" ; else
+  echo "There were no leaks recently in Pit System"  
 fi
-if [ "$leaknowcheckint" -gt "$testnumber" ]; then
-  echo "Help there is a leak today2" ; else
-  echo "There are no leaks at this moment2"    
+if [ "$leaknowcheckintp" -gt "$testnumber" ]; then
+  echo "Help there is a leak today in Pit System" ; else
+  echo "There are no leaks at this moment in Pit System"    
 fi
-if [ "$backflowcheckint" -gt "$testnumber" ]; then
-  echo "Help there is a backflow2"; else
-  echo "There is no backflow2"    
+if [ "$backflowcheckintp" -gt "$testnumber" ]; then
+  echo "Help there is a backflow in Pit System"; else
+  echo "There is no backflow in Pit System"    
 fi
 
 echo "********************************************************************************************"
