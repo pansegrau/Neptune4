@@ -56,27 +56,27 @@ consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);p
   echo "Irrigation Leaknow: $leaknowcheck $UNIT2"
   echo "Irrigation Backflow: $backflowcheck $UNIT2"
   
-  testnumber= 0.0
+  testnumber=0
   echo "test number is: $testnumber"
   testnumber2=$backflowcheck
   echo "test number2 is: $testnumber2"
 
-if ["$leakcheck" -gt "$testnumber" ]; then
+if ["$leakcheck" /> "$testnumber" ]; then
   echo "Help there is a leak this week"
 fi
-if ["$leaknowcheck" -gt "$testnumber" ]; then
+if ["$leaknowcheck" /> "$testnumber" ]; then
   echo "Help there is a leak now"
 fi
-if ["$backflowcheck" -gt "$testnumber" ]; then
+if ["$backflowcheck" /> "$testnumber" ]; then
   echo "Help there is a backflow"
 fi
-if [$leakcheck -gt "$testnumber2" ]; then
+if [$leakcheck /> "$testnumber2" ]; then
   echo "Help there is a leak this week2"
 fi
-if [$leaknowcheck -gt "$testnumber2" ]; then
+if [$leaknowcheck /> "$testnumber2" ]; then
   echo "Help there is a leak now2"
 fi
-if [$backflowcheck -gt "$testnumber2" ]; then
+if [$backflowcheck /> "$testnumber2" ]; then
   echo "Help there is a backflow2"
 fi
   
