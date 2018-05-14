@@ -61,22 +61,22 @@ consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);p
   testnumber2=$backflowcheck
   echo "test number2 is: $testnumber2"
 
-if ["$leakcheck" /> "$testnumber" ]; then
+if ["$leakcheck"/>"$testnumber"]; then
   echo "Help there is a leak this week"
 fi
-if ["$leaknowcheck" /> "$testnumber" ]; then
+if ["$leaknowcheck"/>"$testnumber"]; then
   echo "Help there is a leak now"
 fi
-if ["$backflowcheck" /> "$testnumber" ]; then
+if ["$backflowcheck"/>"$testnumber"]; then
   echo "Help there is a backflow"
 fi
-if [$leakcheck /> "$testnumber2" ]; then
+if [$leakcheck > "$testnumber2"]; then
   echo "Help there is a leak this week2"
 fi
-if [$leaknowcheck /> "$testnumber2" ]; then
+if [$leaknowcheck > "$testnumber2"]; then
   echo "Help there is a leak now2"
 fi
-if [$backflowcheck /> "$testnumber2" ]; then
+if [$backflowcheck > "$testnumber2"]; then
   echo "Help there is a backflow2"
 fi
   
@@ -250,10 +250,7 @@ pitint=${pit%.*}
   backflowcheckp=$backflowp
   leaknowp=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["LeakNow"])/1')
   leaknowcheckp=$leaknowp
-  echo "Pit Leaks: $leakcheckp $UNIT2"
-  echo "Pit Leaknow: $leaknowcheckp $UNIT2"
-  echo "Pit Backflow: $backflowcheckp $UNIT2"
-
+ 
   # record data for daily house consumption of House at 1 AM (time is adjusted due to UTC)
   if [[ `date +%H` -ge 7 && `date +%H` -lt 8 ]];then
     echo $house > /data/binhouse1AM
@@ -629,6 +626,13 @@ pitint=${pit%.*}
   echo "*    Consumption Pit Meter                           $pitmeter Cubic Meters                "
   echo "*    Consumption Irrigation                          $irrmeter Cubic Meters                "
   echo "*    Consumption Non-Irrigation                      $housemeter Cubic Meters              "
+  echo "********************************************************************************************"
+  echo "Pit Leaks: $leakcheckp $UNIT2"
+  echo "Pit Leaknow: $leaknowcheckp $UNIT2"
+  echo "Pit Backflow: $backflowcheckp $UNIT2"
+  echo "Irrigation Leaks: $leakcheck $UNIT2"
+  echo "Irrigation Leaknow: $leaknowcheck $UNIT2"
+  echo "Irrigation Backflow: $backflowcheck $UNIT2"
 echo "********************************************************************************************"
 echo "Compare the consumption of two meters connected in series"
   echo "******************************************************************************************"
