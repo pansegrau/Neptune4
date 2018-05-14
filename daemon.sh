@@ -620,31 +620,32 @@ pitint=${pit%.*}
   echo "Irrigation Leaks      : $leakcheck $UNIT2"
   echo "Irrigation Leaknow    : $leaknowcheck $UNIT2"
   echo "Irrigation Backflow   : $backflowcheck $UNIT2"
-  
-if [[ "$leakcheckint" -gt "$testnumber" ]]; then
-  echo "Help there was a leak this week in Irrigation System" ; else
-  echo "There were no leaks recently in Irrigation System"
-fi
-if [[ "$leaknowcheckint" -gt "$testnumber" ]]; then
-  echo "Help there is a leak today in Irrigation System" ; else
-  echo "There are no leaks at this moment in Irrigation System"  
-fi
-if [[ "$backflowcheckint" -gt "$testnumber" ]]; then
-  echo "Help there is a backflow in Irrigation System" ; else
-  echo "There is no backflow in Irrigation System"  
-fi
+
 if [ "$leakcheckintp" -gt "$testnumber" ]; then
-  echo "Help there was a leak this week in Pit System" ; else
-  echo "There were no leaks recently in Pit System"  
+  echo "Yes there was a leak this week in Pit System" ; else
+  echo ":)"  
 fi
 if [ "$leaknowcheckintp" -gt "$testnumber" ]; then
-  echo "Help there is a leak today in Pit System" ; else
-  echo "There are no leaks at this moment in Pit System"    
+  echo "Yes there is a leak today in Pit System" ; else
+  echo ":)  :)"    
 fi
 if [ "$backflowcheckintp" -gt "$testnumber" ]; then
-  echo "Help there is a backflow in Pit System"; else
-  echo "There is no backflow in Pit System"    
+  echo "HELP! there is a backflow in Pit System"; else
+  echo ":)  :)  :)"    
+fi  
+if [[ "$leakcheckint" -gt "$testnumber" ]]; then
+  echo "Yes there was a leak this week in Irrigation System" ; else
+  echo ";)"
 fi
+if [[ "$leaknowcheckint" -gt "$testnumber" ]]; then
+  echo "Yes there is a leak today in Irrigation System" ; else
+  echo ";)  ;)"  
+fi
+if [[ "$backflowcheckint" -gt "$testnumber" ]]; then
+  echo "HELP! there is a backflow in Irrigation System" ; else
+  echo ";)  ;)  ;)"  
+fi
+
 
 echo "********************************************************************************************"
 echo "Compare the consumption of two meters connected in series"
