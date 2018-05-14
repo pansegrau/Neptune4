@@ -16,6 +16,7 @@ fi
 
 UNIT_DIVISOR=1000
 UNIT="Cubic Meters"
+UNIT2="Warning"
 
 # Kill this script (and restart the container) if we haven't seen an update in 30 minutes
 # Nasty issue probably related to a memory leak, but this works really well, so not changing it
@@ -45,6 +46,12 @@ consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);p
   #convert to integer
   irrint=${irr%.*}
   
+  leak=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["Leak"])/1')
+  leakcheck=$leak
+  leaknow=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["LeakNow"])/1')
+  echo "leaks: $leakcheck $UNIT2"
+  echo "Back flow: $leaknow $UNIT2"
+
   # record data for nightly consumption of Irrigation meter at 1 PM (time is adjusted due to UTC)
   if [[ `date +%H` -ge 19 && `date +%H` -lt 20 ]];then
     echo "Presently processing 12 PM noon to 1 PM"
