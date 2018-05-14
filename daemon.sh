@@ -204,6 +204,23 @@ pit=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print flo
 
 #convert to integer
 pitint=${pit%.*}
+# subtract irrigation meter from main pit meter
+  house=$(echo $((pitint - irrint)))
+  #convert to cubic meters
+  housemeter=$(echo $((100 * house / 1000))| sed 's/..$/.&/')
+
+  # record data for daily house consumption of House at 1 AM (time is adjusted due to UTC)
+  if [[ `date +%H` -ge 7 && `date +%H` -lt 8 ]];then
+    echo $house > /data/binhouse1AM
+  fi
+  
+  # record data for daily house consumption of House at 12 AM (time is adjusted due to UTC)
+  # and then compute daily consumption
+  if [[ `date +%H` -ge 6 && `date +%H` -lt 7 ]];then
+    house1AM=$(cat /data/binhouse1AM)
+    housemidnight=$(echo $((house - house1AM)))
+    echo $housemidnight > /data/binhousemidnight
+  fi
 
 # record data for nightly consumption of Pit meter at 1 PM (time is adjusted due to UTC)
   if [[ `date +%H` -ge 19 && `date +%H` -lt 20 ]];then
