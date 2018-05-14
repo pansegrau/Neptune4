@@ -52,11 +52,11 @@ consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);p
   backflowcheck=$backflow
   leaknow=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["LeakNow"])/1')
   leaknowcheck=$leaknow
-  echo "Irrigation Leaks: $leakcheck $UNIT2"
-  echo "Irrigation Leaknow: $leaknowcheck $UNIT2"
-  echo "Irrigation Backflow: $backflowcheck $UNIT2"
+ # echo "Irrigation Leaks: $leakcheck $UNIT2"
+ # echo "Irrigation Leaknow: $leaknowcheck $UNIT2"
+ # echo "Irrigation Backflow: $backflowcheck $UNIT2"
   
-  testnumber=0
+  testnumber=0.0
   echo "test number is: $testnumber"
   testnumber2=$backflowcheck
   echo "test number2 is: $testnumber2"
@@ -627,12 +627,12 @@ pitint=${pit%.*}
   echo "*    Consumption Irrigation                          $irrmeter Cubic Meters                "
   echo "*    Consumption Non-Irrigation                      $housemeter Cubic Meters              "
   echo "********************************************************************************************"
-  echo "Pit Leaks: $leakcheckp $UNIT2"
-  echo "Pit Leaknow: $leaknowcheckp $UNIT2"
-  echo "Pit Backflow: $backflowcheckp $UNIT2"
-  echo "Irrigation Leaks: $leakcheck $UNIT2"
-  echo "Irrigation Leaknow: $leaknowcheck $UNIT2"
-  echo "Irrigation Backflow: $backflowcheck $UNIT2"
+  echo "Pit Leaks             : $leakcheckp $UNIT2"
+  echo "Pit Leaknow           : $leaknowcheckp $UNIT2"
+  echo "Pit Backflow          : $backflowcheckp $UNIT2"
+  echo "Irrigation Leaks      : $leakcheck $UNIT2"
+  echo "Irrigation Leaknow    : $leaknowcheck $UNIT2"
+  echo "Irrigation Backflow   : $backflowcheck $UNIT2"
 echo "********************************************************************************************"
 echo "Compare the consumption of two meters connected in series"
   echo "******************************************************************************************"
