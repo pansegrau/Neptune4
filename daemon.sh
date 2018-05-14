@@ -52,38 +52,15 @@ consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);p
   backflowcheck=$backflow
   leaknow=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);print float(obj["Message"]["LeakNow"])/1')
   leaknowcheck=$leaknow
- # echo "Irrigation Leaks: $leakcheck $UNIT2"
- # echo "Irrigation Leaknow: $leaknowcheck $UNIT2"
- # echo "Irrigation Backflow: $backflowcheck $UNIT2"
-  
+   
   testnumber=0
   echo "test number is: $testnumber"
-  testnumber2=$backflowcheck
-  echo "test number2 is: $testnumber2"
-  
+    
 #convert to integers
 leakcheckint=${leakcheck%.*}
 backflowcheckint=${backflowcheck%.*}
 leaknowcheckint=${leaknowcheck%.*}
 
-if [[ "$leakcheckint" -ge "$testnumber" ]];then
-  echo "Help there is a leak this week"
-fi
-if [[ "$leaknowcheckint" -ge "$testnumber" ]];then
-  echo "Help there is a leak now"
-fi
-if [[ "$backflowcheckint" -ge "$testnumber" ]];then
-  echo "Help there is a backflow"
-fi
-if [ "$leakcheckint" -gt "$testnumber2" ];then
-  echo "Help there is a leak this week2"
-fi
-if [ "$leaknowcheckint" -gt "$testnumber2" ];then
-  echo "Help there is a leak now2"
-fi
-if [ "$backflowcheckint" -gt "$testnumber2" ];then
-  echo "Help there is a backflow2"
-fi
   
   # record data for nightly consumption of Irrigation meter at 1 PM (time is adjusted due to UTC)
   if [[ `date +%H` -ge 19 && `date +%H` -lt 20 ]];then
@@ -638,6 +615,32 @@ pitint=${pit%.*}
   echo "Irrigation Leaks      : $leakcheck $UNIT2"
   echo "Irrigation Leaknow    : $leaknowcheck $UNIT2"
   echo "Irrigation Backflow   : $backflowcheck $UNIT2"
+  
+if [[ "$leakcheckint" -ge "$testnumber" ]]; then
+  echo "Help there was a leak this week" ; else
+  echo "There were no leaks recently"
+fi
+if [[ "$leaknowcheckint" -ge "$testnumber" ]]; then
+  echo "Help there is a leak today" ; else
+  echo "There are no leaks at this moment"  
+fi
+if [[ "$backflowcheckint" -ge "$testnumber" ]]; then
+  echo "Help there is a backflow" ; else
+  echo "There is no backflow"  
+fi
+if [ "$leakcheckint" -gt "$testnumber" ]; then
+  echo "Help there was a leak this week2" ; else
+  echo "There were no leaks recently2"  
+fi
+if [ "$leaknowcheckint" -gt "$testnumber" ]; then
+  echo "Help there is a leak today2" ; else
+  echo "There are no leaks at this moment2"    
+fi
+if [ "$backflowcheckint" -gt "$testnumber" ]; then
+  echo "Help there is a backflow2"; else
+  echo "There is no backflow2"    
+fi
+
 echo "********************************************************************************************"
 echo "Compare the consumption of two meters connected in series"
   echo "******************************************************************************************"
