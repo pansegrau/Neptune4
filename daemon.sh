@@ -573,6 +573,10 @@ pitint=${pit%.*}
   echo "10 PM $q10PMb     litres,     $f10PMb litres per min"
   echo "11 PM $q11PMb     litres,     $f11PMb litres per min"
   echo "12 AM $q12AMb     litres,     $f12AMb litres per min"
+  
+  # recall data from disk as program may have rebooted
+ housemidnight=$(cat /data/binhousemidnight)
+ 
  echo "********************************************************************************************" 
  echo "House Consumption for the previous calandar day     :$housemidnight Litres"
   echo "********************************************************************************************"
