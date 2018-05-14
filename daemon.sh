@@ -55,7 +55,26 @@ consumption=$(echo $json | python -c 'import json,sys;obj=json.load(sys.stdin);p
   echo "Irrigation Leaks: $leakcheck $UNIT2"
   echo "Irrigation Leaknow: $leaknowcheck $UNIT2"
   echo "Irrigation Backflow: $backflowcheck $UNIT2"
-
+  
+if ["$leakcheck" -ge 1.0 ]; then
+  echo "Help there is a leak this week"
+fi
+if ["$leaknowcheck" -ge 1.0 ]; then
+  echo "Help there is a leak now"
+fi
+if ["$backflowcheck" -ge 1.0 ]; then
+  echo "Help there is a backflow"
+fi
+if [$leakcheck -ge 1.0 ]; then
+  echo "Help there is a leak this week2"
+fi
+if [$leaknowcheck -ge 1.0 ]; then
+  echo "Help there is a leak now2"
+fi
+if [$backflowcheck -ge 1.0 ]; then
+  echo "Help there is a backflow2"
+fi
+  
   # record data for nightly consumption of Irrigation meter at 1 PM (time is adjusted due to UTC)
   if [[ `date +%H` -ge 19 && `date +%H` -lt 20 ]];then
     echo "Presently processing 12 PM noon to 1 PM"
